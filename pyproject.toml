@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "llmtoolkit"
+version = "0.1.0"
+description = "LLM-Toolkit offers essential tools for efficiently working with large language models. It simplifies integration and optimization, making LLM-based application development smoother."
+authors = ["Mykyta Ishchenko <mykita.ishchenko@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
