@@ -22,12 +22,12 @@ class ConversationMessage(BaseModel):
     context: str = ""
 
 
-class ConversationHistory:
+class ConversationHistory(BaseModel):
     """
     Manages a list of conversation messages.
 
     Attributes:
-        messages (list[ConversationMessage]): The list of messages in the conversation.
+        _messages (list[ConversationMessage]): The list of messages in the conversation.
     """
 
     def __init__(self, messages: list[ConversationMessage] = None):
@@ -39,6 +39,7 @@ class ConversationHistory:
                 Defaults to an empty list.
         """
         self._messages = messages or []
+        super().__init__()
 
     def __getitem__(self, key: int) -> ConversationMessage:
         """
@@ -95,7 +96,7 @@ class ConversationHistory:
         for value in values:
             new_history.append(ConversationMessage(**value))
 
-    def model_dump(self):
+    def model_dump(self, **kwargs):
         """
         Returns a dictionary representation of the message list.
 
@@ -104,12 +105,3 @@ class ConversationHistory:
                 list of message representations.
         """
         return {"messages": [message.model_dump() for message in self._messages]}
-
-    def __repr__(self):
-        """
-        Returns a string representation of the conversation history.
-
-        Returns:
-            str: A string representation of the messages in the history.
-        """
-        return f"messages=({', '.join([str(message) for message in self._messages])})"
