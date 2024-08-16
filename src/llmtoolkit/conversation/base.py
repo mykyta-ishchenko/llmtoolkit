@@ -5,10 +5,9 @@ Defines the `BaseConversation` class with methods for generating responses and s
 
 from abc import abstractmethod
 from collections.abc import Generator
+from typing import Any
 
 from pydantic import BaseModel, Field
-
-from typing import Any
 
 from .history import ConversationHistory
 

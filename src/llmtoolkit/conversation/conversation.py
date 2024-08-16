@@ -26,7 +26,12 @@ class Conversation(BaseConversation):
             Response: The model's response.
         """
         response = await self.llm.generate(prompt, self.history)
-        self.history.append(ConversationMessage(role="assistant", content=response))
+        self.history.extend(
+            [
+                ConversationMessage(role="user", content=prompt),
+                ConversationMessage(role="assistant", content=response),
+            ]
+        )
         return response
 
     async def stream(
