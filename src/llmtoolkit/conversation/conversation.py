@@ -25,7 +25,7 @@ class Conversation(BaseConversation):
         Returns:
             Response: The model's response.
         """
-        response = await self.llm.generate(prompt, self.history.copy())
+        response = await self.llm.generate(prompt, self.history.copy(deep=True))
         self.history.messages.extend(
             [
                 ConversationMessage(role="user", content=prompt),
