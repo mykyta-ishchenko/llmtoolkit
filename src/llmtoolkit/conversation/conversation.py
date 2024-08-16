@@ -7,6 +7,7 @@ language model, including support for conversation history.
 from collections.abc import Generator
 
 from llmtoolkit.conversation.base import BaseConversation
+from .history import ConversationMessage
 
 
 class Conversation(BaseConversation):
@@ -40,4 +41,6 @@ class Conversation(BaseConversation):
         Returns:
             AsyncIterator[Response]: An iterator of the model's responses.
         """
-        return await self.llm.generate_stream(prompt, self.history)
+        response = await self.llm.generate_stream(prompt, self.history)
+        self.history.append(ConversationMessage(role="assistant", content=response))
+        return response
