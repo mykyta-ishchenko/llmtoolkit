@@ -86,3 +86,4 @@ class ConversationHistory(BaseModel):
         new_history = ConversationHistory()
         for value in values:
             new_history.append(ConversationMessage(**value))
+        return new_history
