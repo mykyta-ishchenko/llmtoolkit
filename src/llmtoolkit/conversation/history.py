@@ -4,7 +4,7 @@ Module for managing conversation messages and history in the LLM-Toolkit library
 
 from collections.abc import Generator
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ConversationMessage(BaseModel):
@@ -27,19 +27,10 @@ class ConversationHistory(BaseModel):
     Manages a list of conversation messages.
 
     Attributes:
-        _messages (list[ConversationMessage]): The list of messages in the conversation.
+        messages (list[ConversationMessage]): The list of messages in the conversation.
     """
 
-    def __init__(self, messages: list[ConversationMessage] = None):
-        """
-        Initializes the conversation history with an optional list of messages.
-
-        Args:
-            messages (list[ConversationMessage], optional): Initial list of messages.
-                Defaults to an empty list.
-        """
-        self._messages = messages or []
-        super().__init__()
+    messages: list[ConversationMessage] = Field(default_factory=list)
 
     def __getitem__(self, key: int) -> ConversationMessage:
         """
@@ -51,7 +42,7 @@ class ConversationHistory(BaseModel):
         Returns:
             ConversationMessage: The message at the specified index.
         """
-        return self._messages[key]
+        return self.messages[key]
 
     def __setitem__(self, key: int, value: ConversationMessage) -> None:
         """
@@ -61,7 +52,7 @@ class ConversationHistory(BaseModel):
             key (int): The index where the message should be set.
             value (ConversationMessage): The message to set.
         """
-        self._messages[key] = value
+        self.messages[key] = value
 
     def __iter__(self) -> Generator[ConversationMessage, None, None]:
         """
@@ -70,7 +61,7 @@ class ConversationHistory(BaseModel):
         Returns:
             Generator[ConversationMessage, None, None]: An iterator for the message list.
         """
-        return iter(self._messages)
+        return iter(self.messages)
 
     def extend(self, values: list[ConversationMessage]) -> None:
         """
@@ -79,7 +70,7 @@ class ConversationHistory(BaseModel):
         Args:
             values (list[ConversationMessage]): The messages to add.
         """
-        self._messages.extend(values)
+        self.messages.extend(values)
 
     def append(self, value: ConversationMessage) -> None:
         """
@@ -88,20 +79,10 @@ class ConversationHistory(BaseModel):
         Args:
             value (ConversationMessage): The message to append.
         """
-        self._messages.append(value)
+        self.messages.append(value)
 
     @classmethod
     def from_dict(cls, values: list[dict[str, str]]) -> "ConversationHistory":
         new_history = ConversationHistory()
         for value in values:
             new_history.append(ConversationMessage(**value))
-
-    def model_dump(self, **kwargs):
-        """
-        Returns a dictionary representation of the message list.
-
-        Returns:
-            dict: A dictionary with a single key 'messages' mapping to a
-                list of message representations.
-        """
-        return {"messages": [message.model_dump() for message in self._messages]}
