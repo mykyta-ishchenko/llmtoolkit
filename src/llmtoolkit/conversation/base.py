@@ -8,8 +8,9 @@ from collections.abc import Generator
 
 from pydantic import BaseModel, Field
 
-from llmtoolkit.conversation.history import ConversationHistory
 from llmtoolkit.llms import BaseLLMModel
+
+from .history import ConversationHistory
 
 
 class BaseConversation(BaseModel):

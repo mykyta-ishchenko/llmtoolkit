@@ -5,7 +5,6 @@ Module for managing conversation messages and history in the LLM-Toolkit library
 from collections.abc import Generator
 
 from pydantic import BaseModel
-from typing import Any
 
 
 class ConversationMessage(BaseModel):

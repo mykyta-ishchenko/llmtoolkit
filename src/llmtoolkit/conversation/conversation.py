@@ -6,7 +6,7 @@ language model, including support for conversation history.
 
 from collections.abc import Generator
 
-from llmtoolkit.conversation.base import BaseConversation
+from .base import BaseConversation
 from .history import ConversationMessage
 
 
