@@ -5,6 +5,7 @@ Module for managing conversation messages and history in the LLM-Toolkit library
 from collections.abc import Generator
 
 from pydantic import BaseModel
+from typing import Any
 
 
 class ConversationMessage(BaseModel):
@@ -88,6 +89,12 @@ class ConversationHistory:
             value (ConversationMessage): The message to append.
         """
         self._messages.append(value)
+
+    @classmethod
+    def from_dict(cls, values: list[dict[str, str]]) -> "ConversationHistory":
+        new_history = ConversationHistory()
+        for value in values:
+            new_history.append(ConversationMessage(**value))
 
     def model_dump(self):
         """
