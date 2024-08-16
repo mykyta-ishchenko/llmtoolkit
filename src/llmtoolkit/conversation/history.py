@@ -81,6 +81,10 @@ class ConversationHistory(BaseModel):
         """
         self.messages.append(value)
 
+    def __len__(self):
+        """Length of the history."""
+        return len(self.messages)
+
     @classmethod
     def from_dict(cls, values: list[dict[str, str]]) -> "ConversationHistory":
         new_history = ConversationHistory()
