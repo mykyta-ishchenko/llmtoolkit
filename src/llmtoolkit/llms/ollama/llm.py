@@ -50,7 +50,7 @@ class OllamaLLMModel(BaseLLMModel):
             ConversationHistory: The updated conversation history with the new prompt added.
         """
         conversation_history = conversation_history or ConversationHistory()
-        conversation_history.messages.append(ConversationMessage(role="user", content=prompt))
+        conversation_history.append(ConversationMessage(role="user", content=prompt))
         return conversation_history
 
     async def generate(
