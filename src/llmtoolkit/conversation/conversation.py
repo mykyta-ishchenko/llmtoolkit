@@ -25,7 +25,9 @@ class Conversation(BaseConversation):
         Returns:
             Response: The model's response.
         """
-        return await self.llm.generate(prompt, self.history)
+        response = await self.llm.generate(prompt, self.history)
+        self.history.append(ConversationMessage(role="assistant", content=response))
+        return response
 
     async def stream(
         self,
@@ -36,11 +38,8 @@ class Conversation(BaseConversation):
 
         Args:
             prompt (str): The prompt for the model.
-            conversation_history (ConversationHistory, optional): The conversation history.
 
         Returns:
             AsyncIterator[Response]: An iterator of the model's responses.
         """
-        response = await self.llm.generate_stream(prompt, self.history)
-        self.history.append(ConversationMessage(role="assistant", content=response))
-        return response
+        return await self.llm.generate_stream(prompt, self.history)

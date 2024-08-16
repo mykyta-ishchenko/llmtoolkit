@@ -29,7 +29,6 @@ class BaseConversation(BaseModel):
 
         Args:
             prompt (str): The prompt for the model.
-            conversation_history (ConversationHistory, optional): The conversation history.
 
         Returns:
             str: The model's response.
@@ -46,7 +45,6 @@ class BaseConversation(BaseModel):
 
         Args:
             prompt (str): The prompt for the model.
-            conversation_history (ConversationHistory, optional): The conversation history.
 
         Returns:
             Generator[str, None, None]: A generator of the model's responses.
