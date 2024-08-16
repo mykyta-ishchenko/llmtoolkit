@@ -8,7 +8,7 @@ from collections.abc import Generator
 
 from pydantic import BaseModel, Field
 
-from llmtoolkit.llms import BaseLLMModel
+from typing import Any
 
 from .history import ConversationHistory
 
@@ -18,7 +18,7 @@ class BaseConversation(BaseModel):
     and interacting with a language model."""
 
     history: ConversationHistory = Field(default_factory=ConversationHistory)
-    llm: BaseLLMModel
+    llm: Any
 
     @abstractmethod
     async def chat(
