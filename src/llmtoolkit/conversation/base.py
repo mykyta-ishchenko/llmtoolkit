@@ -20,7 +20,10 @@ class BaseConversation(BaseModel):
     llm: BaseLLMModel
 
     @abstractmethod
-    async def chat(self, prompt: str, conversation_history: ConversationHistory = None) -> str:
+    async def chat(
+        self,
+        prompt: str,
+    ) -> str:
         """
         Abstract method for generating a response.
 
@@ -35,7 +38,8 @@ class BaseConversation(BaseModel):
 
     @abstractmethod
     async def stream(
-        self, prompt: str, conversation_history: ConversationHistory = None
+        self,
+        prompt: str,
     ) -> Generator[str, None, None]:
         """
         Abstract method for streaming responses.
