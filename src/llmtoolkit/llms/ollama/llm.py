@@ -5,7 +5,7 @@ This module contains the `OllamaLLMModel` class, which extends the `BaseLLMModel
 asynchronous methods for generating text and streaming responses using the Ollama API.
 """
 
-from typing import Generator
+from collections.abc import Generator
 
 from ollama import AsyncClient as OllamaAsyncClient
 
@@ -39,7 +39,8 @@ class OllamaLLMModel(BaseLLMModel):
         self, prompt: str, conversation_history: ConversationHistory
     ) -> ConversationHistory:
         """
-        Prepares the conversation history for the current prompt by appending the prompt as a new message.
+        Prepares the conversation history for the current prompt by
+            appending the prompt as a new message.
 
         Args:
             prompt (str): The input text prompt for the model.
@@ -70,9 +71,7 @@ class OllamaLLMModel(BaseLLMModel):
         Raises:
             Exception: If there is an error in generating the response from the API.
         """
-        conversation_history = self.__prepare_conversation_history(
-            prompt, conversation_history
-        )
+        conversation_history = self.__prepare_conversation_history(prompt, conversation_history)
         response = await self._client.chat(
             model=self.model_name,
             messages=conversation_history.model_dump().get("messages"),
@@ -85,7 +84,8 @@ class OllamaLLMModel(BaseLLMModel):
         conversation_history: ConversationHistory = None,
     ) -> Generator[str, None, None]:
         """
-        Asynchronously generates a response in a streaming manner for the given prompt using the Ollama API.
+        Asynchronously generates a response in a streaming manner for
+            the given prompt using the Ollama API.
 
         Args:
             prompt (str): The input text prompt for the model.
@@ -97,9 +97,7 @@ class OllamaLLMModel(BaseLLMModel):
         Raises:
             Exception: If there is an error in streaming the response from the API.
         """
-        conversation_history = self.__prepare_conversation_history(
-            prompt, conversation_history
-        )
+        conversation_history = self.__prepare_conversation_history(prompt, conversation_history)
         async for chunk in await self._client.chat(
             model=self.model_name,
             messages=conversation_history.model_dump().get("messages"),

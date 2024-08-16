@@ -2,7 +2,7 @@
 Module for managing conversation messages and history in the LLM-Toolkit library.
 """
 
-from typing import Generator
+from collections.abc import Generator
 
 from pydantic import BaseModel
 
@@ -35,7 +35,8 @@ class ConversationHistory:
         Initializes the conversation history with an optional list of messages.
 
         Args:
-            messages (list[ConversationMessage], optional): Initial list of messages. Defaults to an empty list.
+            messages (list[ConversationMessage], optional): Initial list of messages.
+                Defaults to an empty list.
         """
         self._messages = messages or []
 
@@ -93,7 +94,8 @@ class ConversationHistory:
         Returns a dictionary representation of the message list.
 
         Returns:
-            dict: A dictionary with a single key 'messages' mapping to a list of message representations.
+            dict: A dictionary with a single key 'messages' mapping to a
+                list of message representations.
         """
         return {"messages": [message.model_dump() for message in self._messages]}
 

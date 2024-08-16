@@ -4,7 +4,7 @@ Defines the `BaseConversation` class with methods for generating responses and s
 """
 
 from abc import abstractmethod
-from typing import Generator
+from collections.abc import Generator
 
 from pydantic import BaseModel, Field
 
@@ -20,9 +20,7 @@ class BaseConversation(BaseModel):
     llm: BaseLLMModel
 
     @abstractmethod
-    async def chat(
-        self, prompt: str, conversation_history: ConversationHistory = None
-    ) -> str:
+    async def chat(self, prompt: str, conversation_history: ConversationHistory = None) -> str:
         """
         Abstract method for generating a response.
 

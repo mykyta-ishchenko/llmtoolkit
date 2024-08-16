@@ -4,7 +4,7 @@ This module defines the `Conversation` class for handling chat and streaming int
 language model, including support for conversation history.
 """
 
-from typing import Generator
+from collections.abc import Generator
 
 from llmtoolkit.conversation.base import BaseConversation
 from llmtoolkit.conversation.history import ConversationHistory
@@ -15,9 +15,7 @@ class Conversation(BaseConversation):
     Extends `BaseConversation` to provide chat and streaming capabilities.
     """
 
-    async def chat(
-        self, prompt: str, conversation_history: ConversationHistory = None
-    ) -> str:
+    async def chat(self, prompt: str, conversation_history: ConversationHistory = None) -> str:
         """
         Generates a response from the language model.
 

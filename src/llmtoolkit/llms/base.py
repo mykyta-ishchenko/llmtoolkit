@@ -7,7 +7,7 @@ model information, with support for asynchronous operations.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
 
 from llmtoolkit.conversation import ConversationHistory
 
@@ -34,9 +34,7 @@ class BaseLLMModel(ABC):
         self.config = kwargs
 
     @abstractmethod
-    async def generate(
-        self, prompt: str, conversation_history: ConversationHistory
-    ) -> str:
+    async def generate(self, prompt: str, conversation_history: ConversationHistory) -> str:
         """
         Abstract method for generating text based on a given prompt asynchronously.
 
@@ -54,9 +52,7 @@ class BaseLLMModel(ABC):
         ...
 
     @abstractmethod
-    async def generate_stream(
-        self, prompt: str, conversation_history: ConversationHistory
-    ):
+    async def generate_stream(self, prompt: str, conversation_history: ConversationHistory):
         """
         Abstract method for generating text in a stream asynchronously.
 
@@ -70,7 +66,7 @@ class BaseLLMModel(ABC):
         """
         ...
 
-    def get_model_info(self) -> Dict[str, Any]:
+    def get_model_info(self) -> dict[str, Any]:
         """
         Returns information about the model.
 
