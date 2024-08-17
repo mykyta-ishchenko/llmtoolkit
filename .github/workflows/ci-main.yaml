@@ -24,10 +24,12 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: make install-linters
+        run: pip install ruff
 
       - name: Run linters
-        run: make lint-no-poetry
+        run: |
+          ruff format .
+          ruff check .
 
       - name: Read project version
         id: read_version
