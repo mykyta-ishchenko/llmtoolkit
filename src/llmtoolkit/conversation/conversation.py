@@ -47,4 +47,10 @@ class Conversation(BaseConversation):
         Returns:
             AsyncIterator[Response]: An iterator of the model's responses.
         """
+        self.history.extend(
+            [
+                ConversationMessage(role="user", content=prompt),
+                ConversationMessage(role="assistant", content=""),
+            ]
+        )
         return self.llm.generate_stream(prompt, self.history)
