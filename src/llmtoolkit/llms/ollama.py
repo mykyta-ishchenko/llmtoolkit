@@ -1,8 +1,9 @@
 """
 Module for implementing the OllamaLLMModel class for interacting with the Ollama language model API.
 
-This module contains the `OllamaLLMModel` class, which extends the `BaseLLMModel` to provide
-asynchronous methods for generating text and streaming responses using the Ollama API.
+This module provides the `OllamaModel` and `OllamaAsyncModel` classes, which extend `BaseLLMModel`
+and `BaseAsyncLLMModel`, respectively. These classes offer synchronous and asynchronous methods
+for generating text and streaming responses using the Ollama API.
 """
 
 from collections.abc import Generator
@@ -21,14 +22,13 @@ from .base import BaseAsyncLLMModel, BaseLLMModel
 
 class OllamaModel(BaseLLMModel):
     """
-    A class for interacting with the Ollama language model API.
+    A class for synchronous interactions with the Ollama language model API.
 
-    Inherits from `BaseLLMModel` and provides implementation for generating text and
-    streaming responses.
+    This class extends `BaseLLMModel` to support text generation and streaming responses.
 
     Attributes:
-        host: The host  name of the Ollama model.
-        _client (OllamaClient): The client for interacting with the Ollama API.
+        host (str): Hostname of the Ollama model.
+        _client (OllamaClient): Client instance for interacting with the Ollama API.
     """
 
     host: str
@@ -42,17 +42,17 @@ class OllamaModel(BaseLLMModel):
         self, prompt: str, conversation_history: ConversationHistory = None, **kwargs
     ) -> str:
         """
-        Asynchronously generates a response for the given prompt using the Ollama API.
+        Generates a synchronous response for the given prompt using the Ollama API.
 
         Args:
-            prompt (str): The input text prompt for the model.
-            conversation_history (ConversationHistory, optional): The existing conversation history.
+            prompt (str): Input text prompt for generating a response.
+            conversation_history (ConversationHistory, optional): Existing conversation history.
 
         Returns:
             str: The generated text response.
 
         Raises:
-            Exception: If there is an error in generating the response from the API.
+            exc.OllamaConnectionError: If there is a connection error when accessing the API.
         """
         conversation_history = conversation_history or ConversationHistory()
         try:
@@ -60,6 +60,7 @@ class OllamaModel(BaseLLMModel):
                 model=self.model_name,
                 messages=conversation_history.to_dict()
                 + [ConversationMessage(role=Roles.USER, content=prompt).model_dump()],
+                **kwargs,
             )
         except httpx.ConnectError:
             raise exc.OllamaConnectionError
@@ -69,18 +70,17 @@ class OllamaModel(BaseLLMModel):
         self, prompt: str, conversation_history: ConversationHistory = None, **kwargs
     ) -> Generator[str, None, None]:
         """
-        Asynchronously generates a response in a streaming manner for
-            the given prompt using the Ollama API.
+        Generates a streaming response for the given prompt using the Ollama API.
 
         Args:
-            prompt (str): The input text prompt for the model.
-            conversation_history (ConversationHistory, optional): The existing conversation history.
+            prompt (str): Input text prompt for generating a streaming response.
+            conversation_history (ConversationHistory, optional): Existing conversation history.
 
         Yields:
-            str: The streaming text response chunks.
+            str: Streaming chunks of the response text.
 
         Raises:
-            Exception: If there is an error in streaming the response from the API.
+            exc.OllamaConnectionError: If there is a connection error when accessing the API.
         """
         conversation_history = conversation_history or ConversationHistory()
         try:
@@ -89,6 +89,7 @@ class OllamaModel(BaseLLMModel):
                 messages=conversation_history.to_dict()
                 + [ConversationMessage(role=Roles.USER, content=prompt).model_dump()],
                 stream=True,
+                **kwargs,
             ):
                 yield chunk["message"]["content"]
         except httpx.ConnectError:
@@ -97,13 +98,15 @@ class OllamaModel(BaseLLMModel):
 
 class OllamaAsyncModel(BaseAsyncLLMModel):
     """
-    A class for interacting with the Ollama language model API.
+    A class for asynchronous interactions with the Ollama language model API.
 
-    Inherits from `BaseLLMModel` and provides implementation for generating text and
-    streaming responses asynchronously.
+    This class extends `BaseAsyncLLMModel` to support asynchronous text generation and
+    streaming responses.
 
     Attributes:
-        _client (OllamaAsyncClient): The asynchronous client for interacting with the Ollama API.
+        host (str): Hostname of the Ollama model.
+        _client (OllamaAsyncClient): Asynchronous client instance for interacting
+        with the Ollama API.
     """
 
     host: str
@@ -120,14 +123,14 @@ class OllamaAsyncModel(BaseAsyncLLMModel):
         Asynchronously generates a response for the given prompt using the Ollama API.
 
         Args:
-            prompt (str): The input text prompt for the model.
-            conversation_history (ConversationHistory, optional): The existing conversation history.
+            prompt (str): Input text prompt for generating a response.
+            conversation_history (ConversationHistory, optional): Existing conversation history.
 
         Returns:
             str: The generated text response.
 
         Raises:
-            Exception: If there is an error in generating the response from the API.
+            exc.OllamaConnectionError: If there is a connection error when accessing the API.
         """
         conversation_history = conversation_history or ConversationHistory()
         try:
@@ -135,6 +138,7 @@ class OllamaAsyncModel(BaseAsyncLLMModel):
                 model=self.model_name,
                 messages=conversation_history.to_dict()
                 + [ConversationMessage(role=Roles.USER, content=prompt).model_dump()],
+                **kwargs,
             )
         except httpx.ConnectError:
             raise exc.OllamaConnectionError
@@ -144,18 +148,17 @@ class OllamaAsyncModel(BaseAsyncLLMModel):
         self, prompt: str, conversation_history: ConversationHistory = None, **kwargs
     ) -> Generator[str, None, None]:
         """
-        Asynchronously generates a response in a streaming manner for
-            the given prompt using the Ollama API.
+        Asynchronously generates a streaming response for the given prompt using the Ollama API.
 
         Args:
-            prompt (str): The input text prompt for the model.
-            conversation_history (ConversationHistory, optional): The existing conversation history.
+            prompt (str): Input text prompt for generating a streaming response.
+            conversation_history (ConversationHistory, optional): Existing conversation history.
 
         Yields:
-            str: The streaming text response chunks.
+            str: Streaming chunks of the response text.
 
         Raises:
-            Exception: If there is an error in streaming the response from the API.
+            exc.OllamaConnectionError: If there is a connection error when accessing the API.
         """
         conversation_history = conversation_history or ConversationHistory()
         try:
@@ -164,6 +167,7 @@ class OllamaAsyncModel(BaseAsyncLLMModel):
                 messages=conversation_history.to_dict()
                 + [ConversationMessage(role=Roles.USER, content=prompt).model_dump()],
                 stream=True,
+                **kwargs,
             ):
                 yield chunk["message"]["content"]
         except httpx.ConnectError:

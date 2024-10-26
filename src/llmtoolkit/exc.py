@@ -1,24 +1,31 @@
 """
-Module for defining custom exceptions for the LLM-Toolkit library.
+Module for defining custom exceptions in the LLM-Toolkit library.
+
+This module provides a base exception class, `BaseLLMToolkitException`, for handling general
+errors within the library, as well as specific exceptions for more granular error handling.
 """
 
 
 class BaseLLMToolkitException(Exception):
     """
-    Base exception class for the LLM-Toolkit library.
+    Base exception class for errors in the LLM-Toolkit library.
 
     Attributes:
-        message (str): The error message associated with the exception.
+        message (str): A description of the error.
     """
 
-    message: str = "Base exception"
+    message: str = "An error occurred in the LLM-Toolkit library."
 
-    def __init__(self):
-        """
-        Initializes the BaseLLMToolkitException instance with a default message.
-        """
-        super().__init__(self.message)
+    def __init__(self, message: str = None):
+        super().__init__(message or self.message)
 
 
 class OllamaConnectionError(BaseLLMToolkitException):
-    message: str = "Can't connect to Ollama host"
+    """
+    Exception raised when a connection to the Ollama host cannot be established.
+
+    Attributes:
+        message (str): Error message indicating connection failure.
+    """
+
+    message: str = "Can't connect to Ollama host."
