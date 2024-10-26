@@ -1,6 +1,9 @@
 """
 BaseConversation - abstract base class for managing language model conversations.
-Defines the `BaseConversation` class with methods for generating responses and streaming.
+
+This module defines the `BaseConversation` and `BaseAsyncConversation` classes, which provide
+an interface for generating responses and streaming outputs, managing conversation history,
+and interacting with a language model in synchronous and asynchronous modes.
 """
 
 from abc import ABC, abstractmethod
@@ -14,8 +17,12 @@ from .history import ConversationHistory
 
 class BaseConversation(ABC, BaseModel):
     """
-    Abstract base class for managing conversation history
-    and interacting with a language model.
+    Abstract base class for managing conversation history and interacting with a language model
+    in a synchronous manner.
+
+    Attributes:
+        history (ConversationHistory): Manages the history of interactions in the conversation.
+        llm (Any): A language model instance used for generating responses.
     """
 
     history: ConversationHistory = Field(default_factory=ConversationHistory)
@@ -27,13 +34,16 @@ class BaseConversation(ABC, BaseModel):
         prompt: str,
     ) -> str:
         """
-        Abstract method for generating a response.
+        Abstract method for generating a synchronous response based on a given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a response.
 
         Returns:
-            str: The model's response.
+            str: The generated response from the language model.
+
+        Notes:
+            This method must be implemented by subclasses.
         """
         ...
 
@@ -43,20 +53,29 @@ class BaseConversation(ABC, BaseModel):
         prompt: str,
     ) -> Generator[str, None, None]:
         """
-        Abstract method for streaming responses.
+        Abstract method for streaming a synchronous response based on a given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a streaming response.
 
-        Returns:
-            Generator[str, None, None]: A generator of the model's responses.
+        Yields:
+            str: The generated response chunks from the language model in streaming format.
+
+        Notes:
+            This method must be implemented by subclasses.
         """
         ...
 
 
 class BaseAsyncConversation(BaseModel):
-    """Abstract base class for managing conversation history
-    and interacting with a language model."""
+    """
+    Abstract base class for managing conversation history and interacting with a language model
+    in an asynchronous manner.
+
+    Attributes:
+        history (ConversationHistory): Manages the history of interactions in the conversation.
+        llm (Any): An asynchronous language model instance used for generating responses.
+    """
 
     history: ConversationHistory = Field(default_factory=ConversationHistory)
     llm: Any
@@ -67,13 +86,16 @@ class BaseAsyncConversation(BaseModel):
         prompt: str,
     ) -> str:
         """
-        Abstract method for generating a response.
+        Abstract asynchronous method for generating a response based on a given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a response.
 
         Returns:
-            str: The model's response.
+            str: The generated response from the language model.
+
+        Notes:
+            This method must be implemented by subclasses.
         """
         ...
 
@@ -83,12 +105,15 @@ class BaseAsyncConversation(BaseModel):
         prompt: str,
     ) -> Generator[str, None, None]:
         """
-        Abstract method for streaming responses.
+        Abstract asynchronous method for streaming a response based on a given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a streaming response.
 
-        Returns:
-            Generator[str, None, None]: A generator of the model's responses.
+        Yields:
+            str: The generated response chunks from the language model in streaming format.
+
+        Notes:
+            This method must be implemented by subclasses.
         """
         ...
