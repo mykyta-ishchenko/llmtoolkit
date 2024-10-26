@@ -2,6 +2,10 @@
 CHANGELOG
 =========
 
+[0.0.3] - *27.10.2024*
+------
+- MistralAI client support added.
+
 [0.0.2] - *27.10.2024*
 ------
 - sync clients and models added.
