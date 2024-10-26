@@ -3,7 +3,7 @@ BaseConversation - abstract base class for managing language model conversations
 Defines the `BaseConversation` class with methods for generating responses and streaming.
 """
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Generator
 from typing import Any
 
@@ -12,7 +12,49 @@ from pydantic import BaseModel, Field
 from .history import ConversationHistory
 
 
-class BaseConversation(BaseModel):
+class BaseConversation(ABC, BaseModel):
+    """
+    Abstract base class for managing conversation history
+    and interacting with a language model.
+    """
+
+    history: ConversationHistory = Field(default_factory=ConversationHistory)
+    llm: Any
+
+    @abstractmethod
+    def chat(
+        self,
+        prompt: str,
+    ) -> str:
+        """
+        Abstract method for generating a response.
+
+        Args:
+            prompt (str): The prompt for the model.
+
+        Returns:
+            str: The model's response.
+        """
+        ...
+
+    @abstractmethod
+    def stream(
+        self,
+        prompt: str,
+    ) -> Generator[str, None, None]:
+        """
+        Abstract method for streaming responses.
+
+        Args:
+            prompt (str): The prompt for the model.
+
+        Returns:
+            Generator[str, None, None]: A generator of the model's responses.
+        """
+        ...
+
+
+class BaseAsyncConversation(BaseModel):
     """Abstract base class for managing conversation history
     and interacting with a language model."""
 

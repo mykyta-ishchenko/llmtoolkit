@@ -1,14 +1,14 @@
 import asyncio
 
 from llmtoolkit.conversation import ConversationHistory, ConversationMessage
-from llmtoolkit.llms.ollama import OllamaLLMModel
+from llmtoolkit.llms import OllamaAsyncModel
 
 
 async def main():
     # Initialize the Ollama LLM model instance
     model_name = "llama3.1:8b"
     host = "http://localhost:11434"
-    ollama_model = OllamaLLMModel(model_name=model_name, host=host)
+    ollama_model = OllamaAsyncModel(model_name=model_name, host=host)
 
     # Example prompt to the model
     prompt = "What's the latest news on climate change?"
