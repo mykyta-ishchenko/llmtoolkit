@@ -23,7 +23,7 @@ class Conversation(BaseConversation):
         llm (Any): Synchronous language model instance used for generating responses.
     """
 
-    def chat(self, prompt: str) -> str:
+    def chat(self, prompt: str, **kwargs) -> str:
         """
         Generates a synchronous response from the language model based on the given prompt.
 
@@ -34,13 +34,14 @@ class Conversation(BaseConversation):
             str: The generated response from the model.
         """
         self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
-        response = self.llm.generate(prompt, self.history)
+        response = self.llm.generate(prompt, self.history, **kwargs)
         self.history.append(ConversationMessage(role=Roles.ASSISTANT, content=response))
         return response
 
     def stream(
         self,
         prompt: str,
+        **kwargs
     ) -> Generator[str, None, None]:
         """
         Streams synchronous responses from the language model based on the given prompt.
@@ -57,7 +58,7 @@ class Conversation(BaseConversation):
                 ConversationMessage(role=Roles.ASSISTANT, content=""),
             ]
         )
-        return self.llm.generate_stream(prompt, self.history)
+        return self.llm.generate_stream(prompt, self.history, **kwargs)
 
 
 class AsyncConversation(BaseAsyncConversation):
@@ -71,7 +72,7 @@ class AsyncConversation(BaseAsyncConversation):
         llm (Any): Asynchronous language model instance used for generating responses.
     """
 
-    async def chat(self, prompt: str) -> str:
+    async def chat(self, prompt: str, **kwargs) -> str:
         """
         Asynchronously generates a response from the language model based on the given prompt.
 
@@ -82,13 +83,14 @@ class AsyncConversation(BaseAsyncConversation):
             str: The generated response from the model.
         """
         self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
-        response = await self.llm.generate(prompt, self.history)
+        response = await self.llm.generate(prompt, self.history, **kwargs)
         self.history.append(ConversationMessage(role=Roles.ASSISTANT, content=response))
         return response
 
     async def stream(
         self,
         prompt: str,
+        **kwargs
     ) -> Generator[str, None, None]:
         """
         Streams asynchronous responses from the language model based on the given prompt.
@@ -105,4 +107,4 @@ class AsyncConversation(BaseAsyncConversation):
                 ConversationMessage(role=Roles.ASSISTANT, content=""),
             ]
         )
-        return self.llm.generate_stream(prompt, self.history)
+        return self.llm.generate_stream(prompt, self.history, **kwargs)
