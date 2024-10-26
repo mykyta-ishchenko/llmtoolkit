@@ -1,8 +1,9 @@
 """
 Conversation - provides interaction with a language model.
-This module defines the `Conversation` class for handling chat
-and streaming interactions with a language model, including
-support for conversation history.
+
+This module defines the `Conversation` and `AsyncConversation` classes for handling
+synchronous and asynchronous chat and streaming interactions with a language model,
+including support for maintaining conversation history.
 """
 
 from collections.abc import Generator
@@ -13,18 +14,24 @@ from .history import ConversationMessage, Roles
 
 class Conversation(BaseConversation):
     """
-    Extends `BaseConversation` to provide chat and streaming capabilities.
+    Extends `BaseConversation` to provide synchronous chat and streaming capabilities
+    with conversation history support.
+
+    Attributes:
+        history (ConversationHistory): Tracks the conversation history, including user prompts
+            and model responses.
+        llm (Any): Synchronous language model instance used for generating responses.
     """
 
     def chat(self, prompt: str) -> str:
         """
-        Generates a response from the language model.
+        Generates a synchronous response from the language model based on the given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a response.
 
         Returns:
-            Response: The model's response.
+            str: The generated response from the model.
         """
         self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
         response = self.llm.generate(prompt, self.history)
@@ -36,13 +43,13 @@ class Conversation(BaseConversation):
         prompt: str,
     ) -> Generator[str, None, None]:
         """
-        Streams responses from the language model.
+        Streams synchronous responses from the language model based on the given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a streaming response.
 
-        Returns:
-            Generator[Response]: An iterator of the model's responses.
+        Yields:
+            str: Chunks of the model's response streamed iteratively.
         """
         self.history.extend(
             [
@@ -55,18 +62,24 @@ class Conversation(BaseConversation):
 
 class AsyncConversation(BaseAsyncConversation):
     """
-    Extends `BaseAsyncConversation` to provide chat and streaming capabilities.
+    Extends `BaseAsyncConversation` to provide asynchronous chat and streaming capabilities
+    with conversation history support.
+
+    Attributes:
+        history (ConversationHistory): Tracks the conversation history, including user prompts
+            and model responses.
+        llm (Any): Asynchronous language model instance used for generating responses.
     """
 
     async def chat(self, prompt: str) -> str:
         """
-        Generates a response from the language model.
+        Asynchronously generates a response from the language model based on the given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a response.
 
         Returns:
-            Response: The model's response.
+            str: The generated response from the model.
         """
         self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
         response = await self.llm.generate(prompt, self.history)
@@ -78,13 +91,13 @@ class AsyncConversation(BaseAsyncConversation):
         prompt: str,
     ) -> Generator[str, None, None]:
         """
-        Streams responses from the language model.
+        Streams asynchronous responses from the language model based on the given prompt.
 
         Args:
-            prompt (str): The prompt for the model.
+            prompt (str): Input prompt for generating a streaming response.
 
-        Returns:
-            Generator[Response]: An iterator of the model's responses.
+        Yields:
+            str: Chunks of the model's response streamed iteratively.
         """
         self.history.extend(
             [
