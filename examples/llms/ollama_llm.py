@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from llmtoolkit.conversation import ConversationHistory, ConversationMessage
 from llmtoolkit.llms import OllamaAsyncModel
@@ -6,8 +7,8 @@ from llmtoolkit.llms import OllamaAsyncModel
 
 async def main():
     # Initialize the Ollama LLM model instance
-    model_name = "llama3.1:8b"
-    host = "http://localhost:11434"
+    model_name = os.getenv("TOOLKIT__MODEL_NAME", "llama3.1:8b")
+    host = os.getenv("TOOLKIT__OLLAMA_HOST", "http://localhost:11434")
     ollama_model = OllamaAsyncModel(model_name=model_name, host=host)
 
     # Example prompt to the model

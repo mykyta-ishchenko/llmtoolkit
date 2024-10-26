@@ -1,9 +1,14 @@
+import os
+
 from llmtoolkit.conversation import Conversation
 from llmtoolkit.llms import OllamaModel
 
 
 def main():
-    llm = OllamaModel(model_name="llama3.1:8b", host="http://localhost:11434")
+    llm = OllamaModel(
+        model_name=os.getenv("TOOLKIT__MODEL_NAME", "llama3.1:8b"),
+        host=os.getenv("TOOLKIT__OLLAMA_HOST", "http://localhost:11434"),
+    )
 
     conversation = Conversation(llm=llm)
     print(conversation.history)

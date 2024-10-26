@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llmtoolkit"
-version = "0.0.1"
+version = "0.0.2"
 description = "LLM-Toolkit offers essential tools for efficiently working with large language models. It simplifies integration and optimization, making LLM-based application development smoother."
 authors = ["Mykyta Ishchenko <mykita.ishchenko@gmail.com>"]
 readme = "README.md"
