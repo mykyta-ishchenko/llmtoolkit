@@ -1,8 +1,8 @@
 """
 Module for defining the base class for language models in the LLM-Toolkit library.
 
-This module contains the `AbstractLLMModel` class, which serves as an abstract base class for
-all large language models. It defines the common interface for generating text and retrieving
+This module contains the `BaseLLMModel` class, which serves as an abstract base class for
+all language models. It defines the common interface for generating text and retrieving
 model information, with support for asynchronous operations.
 """
 

@@ -21,7 +21,7 @@ class ConversationMessage(BaseModel):
     Attributes:
         role (str): The role of the sender (e.g., user, assistant).
         content (str): The content of the message.
-        context (str | None): Optional context for the message, default is an empty string.
+        context (str, optional): Optional context for the message, default is an empty string.
     """
 
     role: str
