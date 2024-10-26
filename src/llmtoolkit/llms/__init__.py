@@ -2,7 +2,6 @@
 Module for the language models in the LLM-Toolkit library.
 """
 
-from llmtoolkit.llms.base import BaseLLMModel
-from llmtoolkit.llms.ollama import OllamaLLMModel
+from .ollama import OllamaAsyncModel, OllamaModel
 
-__all__ = ["BaseLLMModel", "OllamaLLMModel"]
+__all__ = ["OllamaAsyncModel", "OllamaModel"]

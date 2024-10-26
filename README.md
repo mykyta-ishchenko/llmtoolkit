@@ -13,14 +13,11 @@ LLM-Toolkit offers essential tools for efficiently working with large language m
 You can install LLM-Toolkit via pip:
 
 ```bash
-
-pip install git+https://github.com/mykyta-ishchenko/llmtoolkit.git
-
+pip install git@github.com:mykyta-ishchenko/llmtoolkit.git
 ```
 
 You can install LLM-Toolkit via poetry:
 
 ```bash
-
-poetry add git+https://github.com/mykyta-ishchenko/llmtoolkit.git
+poetry add git@github.com:mykyta-ishchenko/llmtoolkit.git
 ```

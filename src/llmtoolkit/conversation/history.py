@@ -3,8 +3,15 @@ Module for managing conversation messages and history in the LLM-Toolkit library
 """
 
 from collections.abc import Generator
+from enum import Enum
 
 from pydantic import BaseModel, Field
+
+
+class Roles(Enum):
+    USER = "user"
+    ASSISTANT = "assistant"
+    SYSTEM = "system"
 
 
 class ConversationMessage(BaseModel):
@@ -14,12 +21,12 @@ class ConversationMessage(BaseModel):
     Attributes:
         role (str): The role of the sender (e.g., user, assistant).
         content (str): The content of the message.
-        context (str): Optional context for the message, default is an empty string.
+        context (str, optional): Optional context for the message, default is an empty string.
     """
 
     role: str
     content: str
-    context: str = ""
+    context: str | None = None
 
 
 class ConversationHistory(BaseModel):
@@ -84,3 +91,6 @@ class ConversationHistory(BaseModel):
     def __len__(self):
         """Length of the history."""
         return len(self.messages)
+
+    def to_dict(self):
+        return self.model_dump().get("messages")
