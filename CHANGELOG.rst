@@ -2,6 +2,13 @@
 CHANGELOG
 =========
 
+[0.0.4] - *09.11.2024*
+------
+- function calling added.
+- openai client support added.
+- chain architecture added.
+- prompt chains added.
+
 [0.0.3] - *27.10.2024*
 ------
 - MistralAI client support added.

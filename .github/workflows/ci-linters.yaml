@@ -1,9 +1,11 @@
-name: Run linters
+name: Lint
 
 on:
-  push:
-    branches-ignore:
-    - 'main'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -11,12 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Get Python version from Makefile
+        id: get_python_version
+        run: echo "PYTHON_VERSION=$(make python-version)" >> $GITHUB_ENV
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
         run: pip install ruff
