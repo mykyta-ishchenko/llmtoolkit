@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Create Release
 
 on:
   push:
@@ -18,10 +18,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get Python version from Makefile
+        id: get_python_version
+        run: echo "PYTHON_VERSION=$(make python-version)" >> $GITHUB_ENV
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
         run: pip install ruff
