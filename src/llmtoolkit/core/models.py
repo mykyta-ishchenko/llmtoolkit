@@ -64,3 +64,12 @@ class ToolCall(BaseModel):
     index: int | None = None
     type: str | None = "function"
     function: ToolCallFunction = Field(default_factory=ToolCallFunction)
+
+
+class GenerationParameters(BaseModel):
+    temperature: float = 0.7
+    top_p: float = 1.0
+    frequency_penalty: float = 0.0
+    presence_penalty: float = 0.0
+    max_tokens: int | None = None
+    stop: list[str] | None = None

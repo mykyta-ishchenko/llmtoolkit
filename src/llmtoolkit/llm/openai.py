@@ -3,23 +3,27 @@ from typing import Any
 
 from openai import AsyncOpenAI, OpenAI
 from openai.types.chat import ChatCompletionMessageToolCall
-from pydantic import PrivateAttr, SecretStr
+from pydantic import PrivateAttr
 
-from llmtoolkit.core.models import ChainResponse, ConversationHistory, ToolCall, ToolCallFunction
+from llmtoolkit.core import UNSET
+from llmtoolkit.core.models import (
+    ChainResponse,
+    ConversationHistory,
+    GenerationParameters,
+    ToolCall,
+    ToolCallFunction,
+)
 from llmtoolkit.llm.base import BaseLLM
 
 
 class OpenAILLM(BaseLLM):
-    api_key: SecretStr
-    base_url: str | None = None
-
     _client: OpenAI = PrivateAttr()
     _async_client: AsyncOpenAI = PrivateAttr()
 
     def model_post_init(self, __context: Any) -> None:
-        self._client = OpenAI(api_key=self.api_key.get_secret_value(), base_url=self.base_url)
+        self._client = OpenAI(api_key=self.api_key.get_secret_value(), base_url=self.host)
         self._async_client = AsyncOpenAI(
-            api_key=self.api_key.get_secret_value(), base_url=self.base_url
+            api_key=self.api_key.get_secret_value(), base_url=self.host
         )
 
     @staticmethod
@@ -31,7 +35,7 @@ class OpenAILLM(BaseLLM):
         return [
             ToolCall(
                 id=tool_call.id,
-                index=tool_call.index if hasattr(tool_call, "index") else None,
+                index=getattr(tool_call, "index", None),
                 type=tool_call.type,
                 function=ToolCallFunction(
                     name=tool_call.function.name,
@@ -41,10 +45,30 @@ class OpenAILLM(BaseLLM):
             for tool_call in tool_calls
         ]
 
-    def generate(self, conversation_history: ConversationHistory | None = None, **kwargs) -> str:
+    def generate(
+        self,
+        conversation_history: ConversationHistory | None = None,
+        *,
+        temperature: float = GenerationParameters.temperature,
+        top_p: float = GenerationParameters.top_p,
+        frequency_penalty: float = GenerationParameters.frequency_penalty,
+        presence_penalty: float = GenerationParameters.presence_penalty,
+        max_tokens: int | None = GenerationParameters.max_tokens,
+        stop: list[str] | None = UNSET,
+        **kwargs: Any,
+    ) -> ChainResponse:
         conversation_history = conversation_history or ConversationHistory()
+        stop = GenerationParameters.stop if stop is UNSET else stop
+
         response = self._client.chat.completions.create(
-            model=self.model_name, messages=conversation_history.dump(), **kwargs
+            model=self.model_name,
+            messages=conversation_history.dump(),
+            temperature=temperature,
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+            max_tokens=max_tokens,
+            stop=stop,
         )
         return ChainResponse(
             content=response.choices[0].message.content or "",
@@ -54,11 +78,29 @@ class OpenAILLM(BaseLLM):
         )
 
     async def async_generate(
-        self, conversation_history: ConversationHistory | None = None, **kwargs
-    ) -> str:
+        self,
+        conversation_history: ConversationHistory | None = None,
+        *,
+        temperature: float = GenerationParameters.temperature,
+        top_p: float = GenerationParameters.top_p,
+        frequency_penalty: float = GenerationParameters.frequency_penalty,
+        presence_penalty: float = GenerationParameters.presence_penalty,
+        max_tokens: int | None = GenerationParameters.max_tokens,
+        stop: list[str] | None = UNSET,
+        **kwargs: Any,
+    ) -> ChainResponse:
         conversation_history = conversation_history or ConversationHistory()
+        stop = GenerationParameters.stop if stop is UNSET else stop
+
         response = await self._async_client.chat.completions.create(
-            model=self.model_name, messages=conversation_history.dump(), **kwargs
+            model=self.model_name,
+            messages=conversation_history.dump(),
+            temperature=temperature,
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+            max_tokens=max_tokens,
+            stop=stop,
         )
         return ChainResponse(
             content=response.choices[0].message.content or "",
@@ -68,35 +110,63 @@ class OpenAILLM(BaseLLM):
         )
 
     def generate_stream(
-        self, conversation_history: ConversationHistory | None = None, **kwargs
-    ) -> Generator[str, None, None]:
+        self,
+        conversation_history: ConversationHistory | None = None,
+        *,
+        temperature: float = GenerationParameters.temperature,
+        top_p: float = GenerationParameters.top_p,
+        frequency_penalty: float = GenerationParameters.frequency_penalty,
+        presence_penalty: float = GenerationParameters.presence_penalty,
+        max_tokens: int | None = GenerationParameters.max_tokens,
+        stop: list[str] | None = UNSET,
+        **kwargs: Any,
+    ) -> Generator[ChainResponse, None, None]:
         conversation_history = conversation_history or ConversationHistory()
+        stop = GenerationParameters.stop if stop is UNSET else stop
 
         for chunk in self._client.chat.completions.create(
             model=self.model_name,
             messages=conversation_history.dump(),
+            temperature=temperature,
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+            max_tokens=max_tokens,
+            stop=stop,
             stream=True,
-            **kwargs,
         ):
             yield ChainResponse(
                 content=chunk.choices[0].delta.content or "",
                 metadata={
-                    "__tool_calls": self._prepare_tool_calls(
-                        chunk.choices[0].delta.tool_calls,
-                    )
+                    "__tool_calls": self._prepare_tool_calls(chunk.choices[0].delta.tool_calls)
                 },
             )
 
     async def async_generate_stream(
-        self, conversation_history: ConversationHistory | None = None, **kwargs
-    ) -> Generator[str, None, None]:
+        self,
+        conversation_history: ConversationHistory | None = None,
+        *,
+        temperature: float = GenerationParameters.temperature,
+        top_p: float = GenerationParameters.top_p,
+        frequency_penalty: float = GenerationParameters.frequency_penalty,
+        presence_penalty: float = GenerationParameters.presence_penalty,
+        max_tokens: int | None = GenerationParameters.max_tokens,
+        stop: list[str] | None = UNSET,
+        **kwargs: Any,
+    ) -> Generator[ChainResponse, None, None]:
         conversation_history = conversation_history or ConversationHistory()
+        stop = GenerationParameters.stop if stop is UNSET else stop
 
         async for chunk in await self._async_client.chat.completions.create(
             model=self.model_name,
             messages=conversation_history.dump(),
+            temperature=temperature,
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+            max_tokens=max_tokens,
+            stop=stop,
             stream=True,
-            **kwargs,
         ):
             yield ChainResponse(
                 content=chunk.choices[0].delta.content or "",
