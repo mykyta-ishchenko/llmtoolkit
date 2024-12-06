@@ -12,8 +12,6 @@ from .base import BaseLLM
 
 
 class OllamaLLM(BaseLLM):
-    host: str
-
     _client: OllamaClient = PrivateAttr()
     _async_client: OllamaAsyncClient = PrivateAttr()
 
@@ -81,7 +79,6 @@ class OllamaLLM(BaseLLM):
             model=self.model_name,
             messages=conversation_history.dump(),
             stream=True,
-            **kwargs,
         ):
             yield ChainResponse(
                 content=chunk["message"]["content"],
@@ -100,7 +97,6 @@ class OllamaLLM(BaseLLM):
             model=self.model_name,
             messages=conversation_history.dump(),
             stream=True,
-            **kwargs,
         ):
             yield ChainResponse(
                 content=chunk["message"]["content"],
