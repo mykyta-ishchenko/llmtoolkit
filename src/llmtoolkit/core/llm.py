@@ -1,11 +1,9 @@
 from abc import ABC
 
-from pydantic import SecretStr
-
-from llmtoolkit.chain import Chain
+from .chain import Chain
 
 
 class BaseLLM(Chain, ABC):
-    api_key: SecretStr = ""
+    api_key: str = "-"
     host: str | None = None
     model_name: str = "default"
