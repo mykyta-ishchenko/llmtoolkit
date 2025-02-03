@@ -6,6 +6,8 @@ CHANGELOG
 ------
 - generation parameters added.
 - llm initialization fixes.
+- removed unready functionality.
+- added asr models.
 
 [0.0.4] - *09.11.2024*
 ------

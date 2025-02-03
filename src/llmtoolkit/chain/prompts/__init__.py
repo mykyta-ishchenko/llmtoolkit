@@ -1,5 +1,5 @@
 from .prompt import PromptChain
 from .system_prompt import SystemPromptChain
-from .user_message_prompt import UserMessagePromptChain
+from .user_message_prompt_cover import UserMessagePromptCoverChain
 
-__all__ = ["PromptChain", "SystemPromptChain", "UserMessagePromptChain"]
+__all__ = ["PromptChain", "SystemPromptChain", "UserMessagePromptCoverChain"]

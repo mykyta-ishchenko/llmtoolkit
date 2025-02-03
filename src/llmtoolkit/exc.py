@@ -9,9 +9,13 @@ class StreamReadError(BaseLLMToolkitException):
     message: str = "An error occurred while reading stream."
 
 
-class NativeFunctionCallingSupportError(BaseLLMToolkitException):
-    message: str = "Native function calling is not supported for this model or run mode."
+class NotImplementedToolkitError(BaseLLMToolkitException):
+    message: str = "Not implemented."
 
 
-class FunctionCallingError(BaseLLMToolkitException):
-    message = str = "Error occurred while calling function."
+class UnsupportedFormatError(BaseLLMToolkitException):
+    message: str = "Unsupported format."
+
+
+class FfmpegError(BaseLLMToolkitException):
+    message: str = "Ffmpeg installation required."
