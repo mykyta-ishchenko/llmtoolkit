@@ -1,37 +1,145 @@
-from collections.abc import Generator
+from collections.abc import AsyncGenerator, Generator
+from typing import Any
 
-from llmtoolkit.core.models import ChainResponse, ConversationMessage, Roles
+from pydantic import Field
 
-from .base import BaseConversation
+from llmtoolkit.core import UNSET
+from llmtoolkit.core.conversation import BaseConversation
+from llmtoolkit.core.models import (
+    ChainResponse,
+    Context,
+    GenerationParameters,
+)
 
 
 class Conversation(BaseConversation):
-    def chat(self, prompt: str, **kwargs) -> ChainResponse:
-        self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
-        response = self.chain.generate(self.history.copy(deep=True), **kwargs)
-        self.history.append(ConversationMessage(role=Roles.ASSISTANT, content=response.content))
+    parameters: GenerationParameters = Field(default_factory=GenerationParameters)
+
+    def _merge_generation_params(
+        self,
+        temperature: float,
+        top_p: float,
+        frequency_penalty: float,
+        presence_penalty: float,
+        max_completion_tokens: int | None,
+        stop: list[str] | None,
+    ) -> dict[str, Any]:
+        return dict(
+            temperature=self.parameters.temperature if temperature is UNSET else temperature,
+            top_p=self.parameters.top_p if top_p is UNSET else top_p,
+            frequency_penalty=self.parameters.frequency_penalty
+            if frequency_penalty is UNSET
+            else frequency_penalty,
+            presence_penalty=self.parameters.presence_penalty
+            if presence_penalty is UNSET
+            else presence_penalty,
+            max_completion_tokens=self.parameters.max_completion_tokens
+            if max_completion_tokens is UNSET
+            else max_completion_tokens,
+            stop=self.parameters.stop if stop is UNSET else stop,
+        )
+
+    def chat(
+        self,
+        prompt: str,
+        context: Context | None = None,
+        *,
+        temperature: float = UNSET,
+        top_p: float = UNSET,
+        frequency_penalty: float = UNSET,
+        presence_penalty: float = UNSET,
+        max_completion_tokens: int | None = UNSET,
+        stop: list[str] | None = UNSET,
+        **kwargs,
+    ) -> ChainResponse:
+        self.history.add_user_message(prompt, context)
+        generation_params = self._merge_generation_params(
+            temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
+        )
+        response = self.chain.generate(
+            conversation_history=self.history.copy(deep=True),
+            **generation_params,
+            **kwargs,
+        )
+        self.history.add_assistant_message(response.content)
         return response
 
-    async def async_chat(self, prompt: str, **kwargs) -> ChainResponse:
-        self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
-        response = await self.chain.async_generate(self.history.copy(deep=True), **kwargs)
-        self.history.append(ConversationMessage(role=Roles.ASSISTANT, content=response.content))
+    async def async_chat(
+        self,
+        prompt: str,
+        context: Context | None = None,
+        *,
+        temperature: float = UNSET,
+        top_p: float = UNSET,
+        frequency_penalty: float = UNSET,
+        presence_penalty: float = UNSET,
+        max_completion_tokens: int | None = UNSET,
+        stop: list[str] | None = UNSET,
+        **kwargs,
+    ) -> ChainResponse:
+        self.history.add_user_message(prompt, context)
+        generation_params = self._merge_generation_params(
+            temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
+        )
+        response = await self.chain.async_generate(
+            conversation_history=self.history.copy(deep=True),
+            **generation_params,
+            **kwargs,
+        )
+        self.history.add_assistant_message(response.content)
         return response
 
-    def stream(self, prompt: str, **kwargs) -> Generator[ChainResponse, None, None]:
-        self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
-        assistant = ""
-        for chunk in self.chain.generate_stream(self.history.copy(deep=True), **kwargs):
-            assistant += chunk.content
-            yield chunk
-        self.history.append(ConversationMessage(role=Roles.ASSISTANT, content=assistant))
-
-    async def async_stream(self, prompt: str, **kwargs) -> Generator[ChainResponse, None, None]:
-        self.history.append(ConversationMessage(role=Roles.USER, content=prompt))
-        assistant = ""
-        async for chunk in await self.chain.async_generate_stream(
-            self.history.copy(deep=True), **kwargs
+    def stream(
+        self,
+        prompt: str,
+        context: Context | None = None,
+        *,
+        temperature: float = UNSET,
+        top_p: float = UNSET,
+        frequency_penalty: float = UNSET,
+        presence_penalty: float = UNSET,
+        max_completion_tokens: int | None = UNSET,
+        stop: list[str] | None = UNSET,
+        **kwargs,
+    ) -> Generator[ChainResponse, None, None]:
+        self.history.add_user_message(prompt, context)
+        history = self.history.copy(deep=True)
+        self.history.add_user_message("")
+        generation_params = self._merge_generation_params(
+            temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
+        )
+        for chunk in self.chain.generate_stream(
+            conversation_history=history,
+            **generation_params,
+            **kwargs,
         ):
-            assistant += chunk.content
+            self.history[-1].content += chunk.content
             yield chunk
-        self.history.append(ConversationMessage(role=Roles.ASSISTANT, content=assistant))
+        self.history.add_assistant_message("")
+
+    async def async_stream(
+        self,
+        prompt: str,
+        context: Context | None = None,
+        *,
+        temperature: float = UNSET,
+        top_p: float = UNSET,
+        frequency_penalty: float = UNSET,
+        presence_penalty: float = UNSET,
+        max_completion_tokens: int | None = UNSET,
+        stop: list[str] | None = UNSET,
+        **kwargs,
+    ) -> AsyncGenerator[ChainResponse, None]:
+        self.history.add_user_message(prompt, context)
+        history = self.history.copy(deep=True)
+        self.history.add_assistant_message("")
+        generation_params = self._merge_generation_params(
+            temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
+        )
+        async for chunk in self.chain.async_generate_stream(
+            conversation_history=history,
+            **generation_params,
+            **kwargs,
+        ):
+            self.history[-1].content += chunk.content
+            yield chunk

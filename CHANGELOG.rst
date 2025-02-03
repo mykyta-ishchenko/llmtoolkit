@@ -2,6 +2,13 @@
 CHANGELOG
 =========
 
+[0.0.5] - *07.12.2024*
+------
+- generation parameters added.
+- llm initialization fixes.
+- removed unready functionality.
+- added asr models.
+
 [0.0.4] - *09.11.2024*
 ------
 - function calling added.
