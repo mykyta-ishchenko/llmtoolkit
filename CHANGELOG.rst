@@ -2,6 +2,10 @@
 CHANGELOG
 =========
 
+[0.0.6] - *07.01.2024*
+------
+- added need libraries.
+
 [0.0.5] - *07.12.2024*
 ------
 - generation parameters added.
