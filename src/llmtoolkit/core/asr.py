@@ -14,9 +14,7 @@ class ASRModel(ABC, BaseModel):
     def transcribe(self, audio: str | bytes, language: str = UNSET) -> ASRResponse: ...
 
     @abstractmethod
-    async def async_transcribe(
-        self, audio: str | bytes, language: str = UNSET
-    ) -> ASRResponse: ...
+    async def async_transcribe(self, audio: str | bytes, language: str = UNSET) -> ASRResponse: ...
 
     @abstractmethod
     def stream(
