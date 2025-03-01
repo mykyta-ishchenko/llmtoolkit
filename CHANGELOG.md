@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [0.0.8] - *01.03.2025*
+- filetype support added to ASR class.
+
 ## [0.0.7] - *19.02.2025*
 - Local Whisper removed from imports to not brake dependencies.
 

@@ -376,13 +376,13 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.63.2"
+version = "1.65.2"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "openai-1.63.2-py3-none-any.whl", hash = "sha256:1f38b27b5a40814c2b7d8759ec78110df58c4a614c25f182809ca52b080ff4d4"},
-    {file = "openai-1.63.2.tar.gz", hash = "sha256:aeabeec984a7d2957b4928ceaa339e2ead19c61cfcf35ae62b7c363368d26360"},
+    {file = "openai-1.65.2-py3-none-any.whl", hash = "sha256:27d9fe8de876e31394c2553c4e6226378b6ed85e480f586ccfe25b7193fb1750"},
+    {file = "openai-1.65.2.tar.gz", hash = "sha256:729623efc3fd91c956f35dd387fa5c718edd528c4bed9f00b40ef290200fb2ce"},
 ]
 
 [package.dependencies]
@@ -599,13 +599,13 @@ testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
 
 [[package]]
 name = "pytest-httpserver"
-version = "1.1.1"
+version = "1.1.2"
 description = "pytest-httpserver is a httpserver for pytest"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 files = [
-    {file = "pytest_httpserver-1.1.1-py3-none-any.whl", hash = "sha256:aadc744bfac773a2ea93d05c2ef51fa23c087e3cc5dace3ea9d45cdd4bfe1fe8"},
-    {file = "pytest_httpserver-1.1.1.tar.gz", hash = "sha256:e5c46c62c0aa65e5d4331228cb2cb7db846c36e429c3e74ca806f284806bf7c6"},
+    {file = "pytest_httpserver-1.1.2-py3-none-any.whl", hash = "sha256:93009d79574fc982301e8494fdea0884f21bb0caf3bcc719151dfbd1e3a943ea"},
+    {file = "pytest_httpserver-1.1.2.tar.gz", hash = "sha256:38d0b726580d05c47cbd0ced1ecb36a51668ef1596cdc6d70a9cfa2b3cc00ebd"},
 ]
 
 [package.dependencies]
@@ -781,4 +781,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f0c78516e771596416851ff4dd99a67f31f3e1543a0be31adc76b197576a3d93"
+content-hash = "3039bcf81356ffc60f04e34a1901b9f5adbf78bc7d8dd547317c7726b412a0c4"
