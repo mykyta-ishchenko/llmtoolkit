@@ -11,19 +11,23 @@ class ASRModel(ABC, BaseModel):
     model_name: str = "default"
 
     @abstractmethod
-    def transcribe(self, audio: str | bytes, language: str = UNSET) -> ASRResponse: ...
+    def transcribe(
+        self, audio: str | bytes, filetype: str, language: str = UNSET
+    ) -> ASRResponse: ...
 
     @abstractmethod
-    async def async_transcribe(self, audio: str | bytes, language: str = UNSET) -> ASRResponse: ...
+    async def async_transcribe(
+        self, audio: str | bytes, filetype: str, language: str = UNSET
+    ) -> ASRResponse: ...
 
     @abstractmethod
     def stream(
-        self, audio: str | bytes, language: str = UNSET
+        self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> Generator[ASRResponse, None, None]: ...
 
     @abstractmethod
     async def async_stream(
-        self, audio: str | bytes, language: str = UNSET
+        self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> Generator[ASRResponse, None, None]: ...
 
     class Config:

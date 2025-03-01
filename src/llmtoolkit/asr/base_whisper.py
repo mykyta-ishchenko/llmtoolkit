@@ -11,8 +11,11 @@ class BaseWhisper(ASRModel, ABC):
     _ffmpeg_installation_error = "[Errno 2] No such file or directory: 'ffmpeg'"
 
     @staticmethod
-    def _save_to_temp_file(audio: str | bytes) -> str:
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+    def _save_to_temp_file(
+        audio: str | bytes,
+        filetype: str,
+    ) -> str:
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f".{filetype}")
         if isinstance(audio, str):
             subprocess.call(["ffmpeg", "-i", audio, "-y", temp_file.name])
         elif isinstance(audio, bytes):

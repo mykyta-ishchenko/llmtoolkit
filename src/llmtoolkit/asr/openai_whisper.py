@@ -63,7 +63,7 @@ class OpenAIWhisper(BaseWhisper):
             ).strip()
         )
 
-    def _split_audio(self, audio_path: str) -> list[str]:
+    def _split_audio(self, audio_path: str, filetype: str) -> list[str]:
         bit_rate = self._get_bit_rate(audio_path)
         duration = self._get_audio_duration(audio_path)
 
@@ -75,7 +75,7 @@ class OpenAIWhisper(BaseWhisper):
 
         for i in range(num_chunks):
             end_time = min(start_time + chunk_duration_s, duration)
-            chunk_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+            chunk_file = tempfile.NamedTemporaryFile(delete=False, suffix=f".{filetype}")
             subprocess.call(
                 [
                     "ffmpeg",
@@ -94,10 +94,12 @@ class OpenAIWhisper(BaseWhisper):
 
         return chunks
 
-    def _prepare_audio_chunks(self, audio: str | bytes) -> tuple[list[str], list[str]]:
+    def _prepare_audio_chunks(
+        self, audio: str | bytes, filetype: str
+    ) -> tuple[list[str], list[str]]:
         try:
-            temp_audio_path = self._save_to_temp_file(audio)
-            chunks = self._split_audio(temp_audio_path)
+            temp_audio_path = self._save_to_temp_file(audio, filetype)
+            chunks = self._split_audio(temp_audio_path, filetype)
             temp_files = [temp_audio_path] + chunks
             return chunks, temp_files
         except FileNotFoundError as e:
@@ -105,8 +107,8 @@ class OpenAIWhisper(BaseWhisper):
                 raise FfmpegError
             raise e
 
-    def transcribe(self, audio: str | bytes, language: str = UNSET) -> ASRResponse:
-        chunks, temp_files = self._prepare_audio_chunks(audio)
+    def transcribe(self, audio: str | bytes, filetype: str, language: str = UNSET) -> ASRResponse:
+        chunks, temp_files = self._prepare_audio_chunks(audio, filetype)
 
         full_transcription = ""
         try:
@@ -123,8 +125,10 @@ class OpenAIWhisper(BaseWhisper):
 
         return ASRResponse(text=full_transcription.strip())
 
-    async def async_transcribe(self, audio: str | bytes, language: str = UNSET) -> ASRResponse:
-        chunks, temp_files = self._prepare_audio_chunks(audio)
+    async def async_transcribe(
+        self, audio: str | bytes, filetype: str, language: str = UNSET
+    ) -> ASRResponse:
+        chunks, temp_files = self._prepare_audio_chunks(audio, filetype)
 
         full_transcription = ""
         try:
@@ -142,11 +146,11 @@ class OpenAIWhisper(BaseWhisper):
         return ASRResponse(text=full_transcription.strip())
 
     def stream(
-        self, audio: str | bytes, language: str = UNSET
+        self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> Generator[ASRResponse, None, None]:
         raise NotImplementedToolkitError
 
     async def async_stream(
-        self, audio: str | bytes, language: str = UNSET
+        self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> AsyncGenerator[ASRResponse, None]:
         raise NotImplementedToolkitError
