@@ -18,20 +18,20 @@ class PromptChain(Chain):
         conversation_history = self._prepare(conversation_history)
         return self.chain.generate(conversation_history, **kwargs)
 
-    def generate_stream(
+    def stream(
         self, conversation_history: ConversationHistory | None = None, **kwargs
     ) -> Generator[ChainResponse, None, None]:
         conversation_history = self._prepare(conversation_history)
-        return self.chain.generate_stream(conversation_history, **kwargs)
+        return self.chain.stream(conversation_history, **kwargs)
 
-    async def async_generate(
+    async def agenerate(
         self, conversation_history: ConversationHistory | None = None, **kwargs
     ) -> ChainResponse:
         conversation_history = self._prepare(conversation_history)
-        return await self.chain.async_generate(conversation_history, **kwargs)
+        return await self.chain.agenerate(conversation_history, **kwargs)
 
-    async def async_generate_stream(
+    async def astream(
         self, conversation_history: ConversationHistory | None = None, **kwargs
     ) -> Generator[ChainResponse, None, None]:
         conversation_history = self._prepare(conversation_history)
-        return self.chain.async_generate_stream(conversation_history, **kwargs)
+        return self.chain.astream(conversation_history, **kwargs)

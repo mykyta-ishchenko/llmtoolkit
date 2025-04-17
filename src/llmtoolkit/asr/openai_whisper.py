@@ -18,9 +18,9 @@ class OpenAIWhisper(BaseWhisper):
     api_key: str = "-"
     host: str | None = None
 
-    _max_file_size = 25_000_000
-    _overlap_seconds = 3
-    _silence_threshold = -40
+    _max_file_size: int = 25_000_000
+    _overlap_seconds: int = 3
+    _silence_threshold: int = -40
 
     _client: OpenAI = PrivateAttr()
     _async_client: AsyncOpenAI = PrivateAttr()
@@ -125,7 +125,7 @@ class OpenAIWhisper(BaseWhisper):
 
         return ASRResponse(text=full_transcription.strip())
 
-    async def async_transcribe(
+    async def atranscribe(
         self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> ASRResponse:
         chunks, temp_files = self._prepare_audio_chunks(audio, filetype)
@@ -150,7 +150,7 @@ class OpenAIWhisper(BaseWhisper):
     ) -> Generator[ASRResponse, None, None]:
         raise NotImplementedToolkitError
 
-    async def async_stream(
+    async def astream(
         self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> AsyncGenerator[ASRResponse, None]:
         raise NotImplementedToolkitError

@@ -47,7 +47,7 @@ class MistralaiLLM(BaseLLM):
         message = response.choices[0].message
         return ChainResponse(content=message.content or "")
 
-    async def async_generate(
+    async def agenerate(
         self,
         conversation_history: ConversationHistory | None = None,
         *,
@@ -74,7 +74,7 @@ class MistralaiLLM(BaseLLM):
         message = response.choices[0].message
         return ChainResponse(content=message.content or "")
 
-    def generate_stream(
+    def stream(
         self,
         conversation_history: ConversationHistory | None = None,
         *,
@@ -104,7 +104,7 @@ class MistralaiLLM(BaseLLM):
         except httpx.ResponseNotRead:
             raise StreamReadError
 
-    async def async_generate_stream(
+    async def astream(
         self,
         conversation_history: ConversationHistory | None = None,
         *,

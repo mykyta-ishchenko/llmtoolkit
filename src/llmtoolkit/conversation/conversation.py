@@ -64,7 +64,7 @@ class Conversation(BaseConversation):
         self.history.add_assistant_message(response.content)
         return response
 
-    async def async_chat(
+    async def achat(
         self,
         prompt: str,
         context: Context | None = None,
@@ -81,7 +81,7 @@ class Conversation(BaseConversation):
         generation_params = self._merge_generation_params(
             temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
         )
-        response = await self.chain.async_generate(
+        response = await self.chain.agenerate(
             conversation_history=self.history.copy(deep=True),
             **generation_params,
             **kwargs,
@@ -108,7 +108,7 @@ class Conversation(BaseConversation):
         generation_params = self._merge_generation_params(
             temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
         )
-        for chunk in self.chain.generate_stream(
+        for chunk in self.chain.stream(
             conversation_history=history,
             **generation_params,
             **kwargs,
@@ -117,7 +117,7 @@ class Conversation(BaseConversation):
             yield chunk
         self.history.add_assistant_message("")
 
-    async def async_stream(
+    async def astream(
         self,
         prompt: str,
         context: Context | None = None,
@@ -136,7 +136,7 @@ class Conversation(BaseConversation):
         generation_params = self._merge_generation_params(
             temperature, top_p, frequency_penalty, presence_penalty, max_completion_tokens, stop
         )
-        async for chunk in self.chain.async_generate_stream(
+        async for chunk in self.chain.astream(
             conversation_history=history,
             **generation_params,
             **kwargs,

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [0.0.9] - *18.04.2025*
+- async methods names changed.
+
 ## [0.0.8] - *01.03.2025*
 - filetype support added to ASR class.
 

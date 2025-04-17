@@ -14,17 +14,17 @@ class Chain(ABC, BaseModel):
     def generate(self, conversation_history: ConversationHistory, **kwargs) -> ChainResponse: ...
 
     @abstractmethod
-    async def async_generate(
+    async def agenerate(
         self, conversation_history: ConversationHistory, **kwargs
     ) -> ChainResponse: ...
 
     @abstractmethod
-    def generate_stream(
+    def stream(
         self, conversation_history: ConversationHistory, **kwargs
     ) -> Generator[ChainResponse, None, None]: ...
 
     @abstractmethod
-    async def async_generate_stream(
+    async def astream(
         self, conversation_history: ConversationHistory, **kwargs
     ) -> Generator[ChainResponse, None, None]: ...
 

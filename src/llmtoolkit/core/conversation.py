@@ -19,7 +19,7 @@ class BaseConversation(ABC, BaseModel):
     ) -> ChainResponse: ...
 
     @abstractmethod
-    async def async_chat(
+    async def achat(
         self,
         prompt: str,
         **kwargs,
@@ -33,7 +33,7 @@ class BaseConversation(ABC, BaseModel):
     ) -> Generator[ChainResponse, None, None]: ...
 
     @abstractmethod
-    async def async_stream(
+    async def astream(
         self,
         prompt: str,
         **kwargs,
