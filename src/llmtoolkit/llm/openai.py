@@ -48,7 +48,7 @@ class OpenAILLM(BaseLLM):
             content=message.content or "",
         )
 
-    async def async_generate(
+    async def agenerate(
         self,
         conversation_history: ConversationHistory | None = None,
         *,
@@ -77,7 +77,7 @@ class OpenAILLM(BaseLLM):
             content=message.content or "",
         )
 
-    def generate_stream(
+    def stream(
         self,
         conversation_history: ConversationHistory | None = None,
         *,
@@ -108,7 +108,7 @@ class OpenAILLM(BaseLLM):
                 content=delta.content or "",
             )
 
-    async def async_generate_stream(
+    async def astream(
         self,
         conversation_history: ConversationHistory | None = None,
         *,

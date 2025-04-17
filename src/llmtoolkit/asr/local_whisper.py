@@ -29,7 +29,7 @@ class LocalWhisper(BaseWhisper):
 
         return ASRResponse(text=transcription)
 
-    async def async_transcribe(
+    async def atranscribe(
         self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> ASRResponse:
         return self.transcribe(audio, filetype, language)
@@ -39,7 +39,7 @@ class LocalWhisper(BaseWhisper):
     ) -> Generator[ASRResponse, None, None]:
         raise NotImplementedToolkitError
 
-    async def async_stream(
+    async def astream(
         self, audio: str | bytes, filetype: str, language: str = UNSET
     ) -> AsyncGenerator[ASRResponse, None]:
         raise NotImplementedToolkitError
